@@ -9,8 +9,8 @@ def haversine(lon1, lat1, lon2, lat2):
     dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     c = 2 * asin(sqrt(a))
-    #r = 6371 # Radius of earth in kilometers. Use 3956 for miles
-    r = 3956
+    #r = 6371 # radius of earth in kilometers
+    r = 3956 # radius earth use for miles
     return c * r
 
 class LocationType:
@@ -62,6 +62,12 @@ xDim = 1000
 yDim = 1000
 latStep = latDiff / xDim
 longStep = longDiff / yDim
+print(xDim * yDim," total locations dimensions ", xDim, " by ", yDim)
+print("Latitude ", minLat, " to ", maxLat)
+print("Longitude ", minLong, " to ", maxLong)
+squareMiles = haversine(minLong, minLat, maxLong, minLat) * haversine(minLong, minLat, minLong, maxLat)
+printf("Square miles covered ",squareMiles)
+printf("Average grid size ",squareMiles / (xDim * yDim))
 locationMatrix =  np.zeros( (xDim,yDim), dtype=LocationType )
 
 for i in range(xDim):
@@ -104,11 +110,6 @@ for i in range(xDim):
             if distance < minDistance:
                 nearestMatrix[i,j] = stationId
                 minDistance = distance
-
-
-print(xDim * yDim," total locations dimensions ", xDim, " by ", yDim)
-print("Latitude ", minLat, " to ", maxLat)
-print("Longitude ", minLong, " to ", maxLong)
 
 # count locations without service (distance > max)
 counter = 0
